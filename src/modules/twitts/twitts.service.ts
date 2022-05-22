@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateTwittDto, UpdateTwittDto } from './dto';
 
 import { Twitt } from './twitt.entity';
 
@@ -23,14 +24,14 @@ export class TwittsService {
     return this._twitts;
   }
 
-  createTwitt(message: string): void {
+  createTwitt({ message }: CreateTwittDto): void {
     this._twitts.push({
       id: (Math.random() * 2000 + 1).toString(),
       message,
     });
   }
 
-  updateTwitt(id: string, message: string): Twitt {
+  updateTwitt(id: string, { message }: UpdateTwittDto): Twitt {
     const twitt: Twitt = this.findTwitt(id);
     twitt.message = message;
     return twitt;

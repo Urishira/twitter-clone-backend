@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateTwittDto, UpdateTwittDto } from './dto';
 import { Twitt } from './twitt.entity';
 import { TwittsService } from './twitts.service';
 
@@ -29,13 +28,13 @@ export class TwittsController {
   }
 
   @Post()
-  postTwitts(@Body('message') message: string) {
+  postTwitts(@Body() message: CreateTwittDto) {
     return this.twittsService.createTwitt(message);
   }
 
   @Patch(':id')
-  updateTwitts(@Param('id') id: string, @Body('message') message: string) {
-    return this.twittsService.updateTwitt(id, message);
+  updateTwitts(@Param('id') id: string, @Body() twitt: UpdateTwittDto) {
+    return this.twittsService.updateTwitt(id, twitt);
   }
 
   @Delete(':id')
