@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { Twitt } from './twitt.entity';
 
 @Injectable()
@@ -11,7 +12,11 @@ export class TwittsService {
   ];
 
   findTwitt(id: string): Twitt {
-    return this._twitts.find((twitt) => twitt.id === id);
+    const twitt = this._twitts.find((twitt) => twitt.id === id);
+    if (!twitt) {
+      throw new NotFoundException();
+    }
+    return twitt;
   }
 
   findAllTwitt(): Twitt[] {
