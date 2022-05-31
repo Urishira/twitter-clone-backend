@@ -23,7 +23,7 @@ export class TwittsController {
   }
 
   @Get(':id')
-  getTwittsById(@Param('id') id: string): Twitt {
+  getTwittsById(@Param('id') id: number): Twitt {
     return this.twittsService.findTwitt(id);
   }
 
@@ -33,12 +33,12 @@ export class TwittsController {
   }
 
   @Patch(':id')
-  updateTwitts(@Param('id') id: string, @Body() twitt: UpdateTwittDto) {
+  updateTwitts(@Param('id') id: number, @Body() twitt: UpdateTwittDto) {
     return this.twittsService.updateTwitt(id, twitt);
   }
 
   @Delete(':id')
-  deleteTwitts(@Param('id') id: string) {
+  deleteTwitts(@Param('id') id: number) {
     return this.twittsService.removeTwitt(id);
   }
 }

@@ -7,12 +7,12 @@ import { Twitt } from './twitt.entity';
 export class TwittsService {
   private _twitts: Twitt[] = [
     {
-      id: ' 1',
+      id: 1,
       message: 'Hello',
     },
   ];
 
-  findTwitt(id: string): Twitt {
+  findTwitt(id: number): Twitt {
     const twitt = this._twitts.find((twitt) => twitt.id === id);
     if (!twitt) {
       throw new NotFoundException();
@@ -26,18 +26,18 @@ export class TwittsService {
 
   createTwitt({ message }: CreateTwittDto): void {
     this._twitts.push({
-      id: (Math.random() * 2000 + 1).toString(),
+      id: Math.random() * 2000 + 1,
       message,
     });
   }
 
-  updateTwitt(id: string, { message }: UpdateTwittDto): Twitt {
+  updateTwitt(id: number, { message }: UpdateTwittDto): Twitt {
     const twitt: Twitt = this.findTwitt(id);
     twitt.message = message;
     return twitt;
   }
 
-  removeTwitt(id: string): void {
+  removeTwitt(id: number): void {
     const removet = this._twitts.filter((twitt) => twitt.id !== id);
     this._twitts = removet;
   }
