@@ -17,13 +17,13 @@ export class TwittsController {
   constructor(private readonly twittsService: TwittsService) {}
 
   @Get()
-  getTwitts(@Query() filterQuery): Twitt[] {
+  getTwitts(@Query() filterQuery): Promise<Twitt[]> {
     const { SearchItem, olderBy } = filterQuery;
     return this.twittsService.findAllTwitt();
   }
 
   @Get(':id')
-  getTwittsById(@Param('id') id: number): Twitt {
+  getTwittsById(@Param('id') id: number): Promise<Twitt> {
     return this.twittsService.findTwitt(id);
   }
 
@@ -33,12 +33,15 @@ export class TwittsController {
   }
 
   @Patch(':id')
-  updateTwitts(@Param('id') id: number, @Body() twitt: UpdateTwittDto) {
+  updateTwitts(
+    @Param('id') id: number,
+    @Body() twitt: UpdateTwittDto,
+  ): Promise<Twitt> {
     return this.twittsService.updateTwitt(id, twitt);
   }
 
   @Delete(':id')
-  deleteTwitts(@Param('id') id: number) {
+  deleteTwitts(@Param('id') id: number): Promise<void> {
     return this.twittsService.removeTwitt(id);
   }
 }

@@ -1,44 +1,45 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTwittDto, UpdateTwittDto } from './dto';
-
+import { Repository } from 'typeorm';
 import { Twitt } from './twitt.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TwittsService {
-  private _twitts: Twitt[] = [
-    {
-      id: 1,
-      message: 'Hello',
-    },
-  ];
+  constructor(
+    @InjectRepository(Twitt)
+    private readonly twittRepository: Repository<Twitt>,
+  ) {}
 
-  findTwitt(id: number): Twitt {
-    const twitt = this._twitts.find((twitt) => twitt.id === id);
+  async findAllTwitt(): Promise<Twitt[]> {
+    return await this.twittRepository.find();
+  }
+
+  async findTwitt(id: number): Promise<Twitt> {
+    const twitt: Twitt = await this.twittRepository.findOneBy({ id });
     if (!twitt) {
       throw new NotFoundException();
     }
     return twitt;
   }
 
-  findAllTwitt(): Twitt[] {
-    return this._twitts;
+  createTwitt({ message }: CreateTwittDto) {
+    const newTwitt: Twitt = this.twittRepository.create({ message });
+    return this.twittRepository.save(newTwitt);
   }
 
-  createTwitt({ message }: CreateTwittDto): void {
-    this._twitts.push({
-      id: Math.random() * 2000 + 1,
+  async updateTwitt(id: number, { message }: UpdateTwittDto) {
+    const updateTwitt: Twitt = await this.twittRepository.preload({
+      id,
       message,
     });
+    if (!updateTwitt) throw new NotFoundException('Resource not found');
+
+    return updateTwitt;
   }
 
-  updateTwitt(id: number, { message }: UpdateTwittDto): Twitt {
-    const twitt: Twitt = this.findTwitt(id);
-    twitt.message = message;
-    return twitt;
-  }
-
-  removeTwitt(id: number): void {
-    const removet = this._twitts.filter((twitt) => twitt.id !== id);
-    this._twitts = removet;
+  async removeTwitt(id: number): Promise<void> {
+    const twitt: Twitt = await this.twittRepository.findOneBy({ id });
+    if (!twitt) throw new NotFoundException('Resource not found');
   }
 }
